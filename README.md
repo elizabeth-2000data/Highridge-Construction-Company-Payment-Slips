@@ -1,36 +1,57 @@
 # Highridge Construction Company — Weekly Payment Generator
 
-A Python and R program that dynamically generates weekly payment slips
-for 420 construction workers, classifies each by employee level, and
-prints a payroll summary.
+This project automates weekly payment slip generation for 420 construction
+workers using Python and R.
 
 ---
 
-## Files in this project
+## Files
 
-- `payment_generator.py` — Python implementation
-- `payment_generator.R`  — R implementation
-- `README.md`            — This file
+- payment_generator.py — Python implementation
+- payment_generator.R  — R implementation
+- README.md            — Project documentation
+
+---
+
+## How it works
+
+- Dynamically generates a list of 420 workers with unique IDs, names, roles, and salaries
+- Loops through every worker and produces a payment slip
+- Classifies each worker into an employee level based on salary and gender
+- Handles errors without crashing the program
 
 ---
 
 ## Employee Level Rules
 
-| Level | Condition |
-|-------|-----------|
-| A5-F  | Salary > $7,500 AND < $30,000 AND gender is Female |
-| A1    | Salary > $10,000 AND < $20,000 |
-| N/A   | Does not meet any criterion |
+- A5-F: Salary between $7,500 and $30,000 and employee is Female
+- A1:   Salary between $10,000 and $20,000
+- N/A:  Does not meet any criteria
 
-Note: A5-F is checked first. A female worker in the $10k–$20k range
-gets A5-F, not A1.
+Note: A5-F is checked first and takes priority over A1.
 
 ---
 
-## How to run the Python code
+## Requirements
 
-### Requirements
 - Python 3.10 or higher
-- No external packages needed (uses built-in `random` module only)
+- R 4.0 or higher
+- No external libraries or packages needed for either language
 
-### Check Python is installed
+---
+
+## How to run
+
+Python:
+  python payment_generator.py
+
+R:
+  Rscript payment_generator.R
+
+---
+
+## Author
+
+Elizabeth — Highridge Construction Company Assignment
+Languages: Python, R
+Tools: Git, GitHub, VS Code, Git Bash
