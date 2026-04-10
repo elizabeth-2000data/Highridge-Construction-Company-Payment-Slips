@@ -34,19 +34,45 @@ Note: A5-F is checked first and takes priority over A1.
 
 ## Requirements
 
-- Python 3.10 or higher
-- R 4.0 or higher
+- Python 3.10 or higher — download from https://python.org/downloads
+- R 4.0 or higher — download from https://cran.r-project.org
+- Git Bash — download from https://git-scm.com/downloads
 - No external libraries or packages needed for either language
 
 ---
 
-## How to run
+## How to use the Python code
 
-Python:
-  python payment_generator.py
+1. Make sure Python is installed by running:
+   python --version
 
-R:
-  Rscript payment_generator.R
+2. Navigate into the project folder:
+   cd highridge
+
+3. Run the program:
+   python payment_generator.py
+
+4. You will see 420 payment slips generated with employee levels
+   and a full payroll summary printed at the end.
+
+---
+
+## How to use the R code
+
+1. Make sure R is installed by running:
+   Rscript --version
+
+2. If you get "command not found", add R to your PATH by running:
+   export PATH=$PATH:"/c/Program Files/R/R-4.5.3/bin"
+
+3. Navigate into the project folder:
+   cd highridge
+
+4. Run the program:
+   Rscript payment_generator.R
+
+5. You will see the same output as the Python version — 420 payment
+   slips and a payroll summary.
 
 ---
 
