@@ -2,6 +2,7 @@ import random
 
 random.seed(42)
 
+# Name and role data used to build worker records dynamically
 first_names_male = ["James", "John", "Robert", "Michael", "William", "David",
     "Richard", "Joseph", "Thomas", "Charles", "Christopher", "Daniel",
     "Matthew", "Anthony", "Mark", "Donald", "Steven", "Paul", "Andrew", "Kenneth"]
@@ -17,7 +18,7 @@ last_names = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia",
 roles = ["Site Engineer", "Project Manager", "Foreman", "Electrician",
     "Plumber", "Carpenter", "Mason", "Welder", "Safety Officer", "Equipment Operator"]
 
-# Step 2: Dynamically create a list of 420 workers
+# Dynamically build a list of 420 worker dictionaries
 workers = []
 for i in range(1, 421):
     gender = random.choice(["Male", "Female"])
@@ -33,7 +34,7 @@ for i in range(1, 421):
 
 print(f"Generated {len(workers)} workers.\n")
 
-# Step 3 & 4: For loop with conditional statements + Step 5: Exception handling
+# Loop through all workers and generate a payment slip for each one
 payment_slips = []
 
 for worker in workers:
@@ -41,12 +42,16 @@ for worker in workers:
         salary = worker["salary"]
         gender = worker["gender"]
 
+        # Validate salary is a valid number
         if not isinstance(salary, (int, float)):
             raise TypeError(f"Invalid salary type for {worker['id']}")
+
+        # Salary must not be negative
         if salary < 0:
             raise ValueError(f"Negative salary for {worker['id']}")
 
-        # Conditional 1 & 2 — A5-F checked first (takes priority)
+        # Assign employee level based on salary and gender
+        # A5-F is checked first — a qualifying female takes this level over A1
         if salary > 7500 and salary < 30000 and gender == "Female":
             level = "A5-F"
         elif salary > 10000 and salary < 20000:
@@ -54,6 +59,7 @@ for worker in workers:
         else:
             level = "N/A"
 
+        # Build the payment slip for this worker
         slip = {
             "id":     worker["id"],
             "name":   worker["name"],
@@ -65,16 +71,17 @@ for worker in workers:
         payment_slips.append(slip)
 
     except (KeyError, TypeError, ValueError) as e:
+        # Log the error and continue processing remaining workers
         print(f"Error processing worker: {e}")
 
-# Print first 10 slips
+# Print a preview of the first 10 payment slips
 print("Sample payment slips:")
 print("-" * 70)
 for slip in payment_slips[:10]:
     print(f"[{slip['id']}] {slip['name']:<28} | {slip['gender']:<6} | "
           f"${slip['salary']:>10,.2f} | Level: {slip['level']}")
 
-# Summary
+# Print overall payroll summary
 from collections import Counter
 levels = Counter(s["level"] for s in payment_slips)
 print(f"\nTotal slips generated: {len(payment_slips)}")

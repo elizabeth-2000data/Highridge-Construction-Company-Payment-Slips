@@ -1,6 +1,7 @@
 set.seed(42)
 
-first_names_male   <- c("James","John","Robert","Michael","William","David",
+# Name and role data used to build worker records dynamically
+first_names_male <- c("James","John","Robert","Michael","William","David",
   "Richard","Joseph","Thomas","Charles","Christopher","Daniel",
   "Matthew","Anthony","Mark","Donald","Steven","Paul","Andrew","Kenneth")
 
@@ -15,13 +16,13 @@ last_names <- c("Smith","Johnson","Williams","Brown","Jones","Garcia",
 roles <- c("Site Engineer","Project Manager","Foreman","Electrician",
   "Plumber","Carpenter","Mason","Welder","Safety Officer","Equipment Operator")
 
-# Step 2: Dynamically create 420 workers
-count   <- 420
-genders <- sample(c("Male","Female"), count, replace = TRUE)
-salaries<- round(runif(count, 5000, 35000), 2)
-firsts  <- ifelse(genders == "Male",
-                  sample(first_names_male,   count, replace = TRUE),
-                  sample(first_names_female, count, replace = TRUE))
+# Dynamically build a data frame of 420 worker records
+count    <- 420
+genders  <- sample(c("Male","Female"), count, replace = TRUE)
+salaries <- round(runif(count, 5000, 35000), 2)
+firsts   <- ifelse(genders == "Male",
+                   sample(first_names_male,   count, replace = TRUE),
+                   sample(first_names_female, count, replace = TRUE))
 
 workers <- data.frame(
   id     = sprintf("HCC-%04d", 1:count),
@@ -34,7 +35,7 @@ workers <- data.frame(
 
 cat(sprintf("Generated %d workers.\n\n", nrow(workers)))
 
-# Step 3, 4, 5: For loop, conditionals, exception handling
+# Loop through all workers and generate a payment slip for each one
 payment_slips <- list()
 
 for (i in seq_len(nrow(workers))) {
@@ -43,10 +44,14 @@ for (i in seq_len(nrow(workers))) {
     salary <- w$salary
     gender <- w$gender
 
+    # Validate salary is numeric
     if (!is.numeric(salary)) stop(paste("Invalid salary for", w$id))
-    if (salary < 0)          stop(paste("Negative salary for", w$id))
 
-    # Conditional 1 & 2
+    # Salary must not be negative
+    if (salary < 0) stop(paste("Negative salary for", w$id))
+
+    # Assign employee level based on salary and gender
+    # A5-F is checked first — a qualifying female takes this level over A1
     if (salary > 7500 && salary < 30000 && gender == "Female") {
       level <- "A5-F"
     } else if (salary > 10000 && salary < 20000) {
@@ -55,18 +60,23 @@ for (i in seq_len(nrow(workers))) {
       level <- "N/A"
     }
 
+    # Build the payment slip for this worker
     payment_slips[[i]] <- data.frame(
       id = w$id, name = w$name, gender = gender,
       role = w$role, salary = salary, level = level,
       stringsAsFactors = FALSE
     )
+
   }, error = function(e) {
+    # Log the error and continue processing remaining workers
     cat(sprintf("Error on row %d: %s\n", i, conditionMessage(e)))
   })
 }
 
+# Combine all slips into a single data frame
 slips <- do.call(rbind, Filter(Negate(is.null), payment_slips))
 
+# Print a preview of the first 10 payment slips
 cat("Sample payment slips:\n")
 cat(strrep("-", 70), "\n")
 for (i in 1:min(10, nrow(slips))) {
@@ -75,6 +85,7 @@ for (i in 1:min(10, nrow(slips))) {
               s$id, s$name, s$gender, s$salary, s$level))
 }
 
+# Print overall payroll summary
 level_counts <- table(slips$level)
 cat(sprintf("\nTotal slips: %d\n", nrow(slips)))
 cat(sprintf("Total payroll: $%s\n", format(sum(slips$salary), big.mark=",")))
